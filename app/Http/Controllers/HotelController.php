@@ -7,59 +7,61 @@ use Illuminate\Http\Request;
 
 class HotelController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $hotels = Hotel::withCount('rooms')->latest()->get();
+        return view('hotels.index', compact('hotels'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return view('hotels.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:hotels',
+            'phone' => 'nullable|string|max:20',
+            'address' => 'nullable|string',
+            'city' => 'nullable|string|max:100',
+            'country' => 'nullable|string|max:100',
+            'stars' => 'integer|min:1|max:5',
+            'status' => 'in:active,inactive,maintenance',
+            'description' => 'nullable|string'
+        ]);
+
+        Hotel::create($validated);
+        return redirect()->route('hotels.index')->with('success', 'Hotel created successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Hotel $hotel)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Hotel $hotel)
     {
-        //
+        return view('hotels.edit', compact('hotel'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Hotel $hotel)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:hotels,email,' . $hotel->id,
+            'phone' => 'nullable|string|max:20',
+            'address' => 'nullable|string',
+            'city' => 'nullable|string|max:100',
+            'country' => 'nullable|string|max:100',
+            'stars' => 'integer|min:1|max:5',
+            'status' => 'in:active,inactive,maintenance',
+            'description' => 'nullable|string'
+        ]);
+
+        $hotel->update($validated);
+        return redirect()->route('hotels.index')->with('success', 'Hotel updated successfully.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Hotel $hotel)
     {
-        //
+        $hotel->delete();
+        return back()->with('success', 'Hotel heavily removed.');
     }
 }
