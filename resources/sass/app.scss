@@ -1,0 +1,63 @@
+// Fonts
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+// Variables
+$font-family-sans-serif: 'Outfit', sans-serif;
+
+// Premium Vibrant Palette
+$primary: #4F46E5; // Indigo vibrant
+$secondary: #EC4899; // Pink vivid
+$success: #10B981; // Emerald
+$info: #06B6D4; // Cyan
+$warning: #F59E0B; // Amber
+$danger: #EF4444; // Red
+$dark: #0F172A; // Slate dark
+$body-bg: #F8FAFC; 
+$body-color: #1E293B;
+
+// Bootstrap Configuration
+$enable-shadows: true;
+$enable-gradients: true;
+$enable-cssgrid: true;
+
+// Import Bootstrap
+@import "~bootstrap/scss/bootstrap";
+
+// Custom Aesthetics & Glassmorphism
+.glass-panel {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+  border-radius: 16px;
+}
+
+[data-bs-theme="dark"] {
+  body {
+    background-color: #0F172A;
+    color: #F8FAFC;
+  }
+  .glass-panel {
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}
+
+// Micro-animations 
+.hover-lift {
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+  }
+}
+
+.btn {
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  &:active {
+    transform: scale(0.95);
+  }
+}
