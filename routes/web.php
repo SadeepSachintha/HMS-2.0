@@ -13,11 +13,20 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('hotels', \App\Http\Controllers\HotelController::class);
         Route::resource('rooms', \App\Http\Controllers\RoomController::class);
         Route::resource('staff', \App\Http\Controllers\StaffController::class);
+        Route::resource('customers', \App\Http\Controllers\CustomerController::class)->only(['index', 'show']);
         
-        // Billings & Financials Engine (Strictly Admin only for safety)
+        // Report Dashboard Nexus
+        Route::get('reports', [\App\Http\Controllers\ReportController::class, 'index'])->name('reports.index');
+        
+        // Absolute Admin Governance Engine (Billing, Audits, Users)
         Route::middleware(['role:admin'])->group(function () {
+            // Billings Central
             Route::get('billing', [\App\Http\Controllers\BillingController::class, 'index'])->name('billing.index');
             Route::patch('billing/{reservation}', [\App\Http\Controllers\BillingController::class, 'updateStatus'])->name('billing.update');
+
+            // User Master Array
+            Route::resource('users', \App\Http\Controllers\UserController::class)->except(['create', 'store', 'show']);
+            Route::post('users/{user}/force-password', [\App\Http\Controllers\UserController::class, 'forcePasswordReset'])->name('users.password.force');
         });
     });
 

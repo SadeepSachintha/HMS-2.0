@@ -40,9 +40,21 @@
                         <li class="nav-item ps-2">
                             <a class="nav-link" href="{{ route('staff.index') }}"><i class="bi bi-people-fill"></i> Staff</a>
                         </li>
+                        <li class="nav-item ps-2">
+                            <a class="nav-link" href="{{ route('customers.index') }}"><i class="bi bi-person-vcard"></i> CRM</a>
+                        </li>
+                        <li class="nav-item ps-2">
+                            <a class="nav-link text-info" href="{{ route('reports.index') }}"><i class="bi bi-graph-up"></i> Reports</a>
+                        </li>
                         @endif
 
                         @if(Auth::check() && (Auth::user()->role->slug ?? 'guest') === 'admin')
+                        <li class="nav-item ps-2 border-start border-secondary ms-2 ps-3 border-opacity-50">
+                            <span class="nav-link text-muted"><i class="bi bi-shield-lock-fill"></i> Admin Console:</span>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-danger" href="{{ route('users.index') }}"><i class="bi bi-diagram-3-fill"></i> Users</a>
+                        </li>
                         <li class="nav-item ps-2">
                             <a class="nav-link text-warning" href="{{ route('billing.index') }}"><i class="bi bi-wallet2"></i> Billing</a>
                         </li>
