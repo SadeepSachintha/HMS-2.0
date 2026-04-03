@@ -69,4 +69,40 @@ class ReservationController extends Controller
     {
         return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\ReservationsExport, 'reservations-report.xlsx');
     }
+
+    public function create()
+    {
+        $rooms = Room::where('status', 'available')->get();
+        return view('reservations.create', compact('rooms'));
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'room_id' => 'required|exists:rooms,id',
+            'check_in_date' => 'required|date',
+            'check_out_date' => 'required|date|after:check_in_date',
+            'special_requests' => 'nullable|string'
+        ]);
+
+        $room = Room::findOrFail($validated['room_id']);
+        $days = \Carbon\Carbon::parse($validated['check_in_date'])->diffInDays(\Carbon\Carbon::parse($validated['check_out_date']));
+        $totalPrice = $room->price_per_night * max($days, 1);
+
+        $reservation = Reservation::create([
+            'user_id' => auth()->id() ?? 1, // fallback to 1 if testing without auth
+            'room_id' => $validated['room_id'],
+            'check_in_date' => $validated['check_in_date'],
+            'check_out_date' => $validated['check_out_date'],
+            'total_price' => $totalPrice,
+            'status' => 'confirmed',
+            'special_requests' => $validated['special_requests'],
+            'payment_status' => 'unpaid'
+        ]);
+
+        // Broadcast Real-time WebSocket Event!
+        event(new \App\Events\NewReservationCreated($reservation));
+
+        return redirect()->route('reservations.index')->with('success', 'Reservation confirmed successfully! Admin notified in real-time.');
+    }
 }

@@ -40,3 +40,39 @@ document.addEventListener('DOMContentLoaded', function() {
         calendar.render();
     }
 });
+
+import './echo';
+
+// Global Pusher Listener for Admin Notifications
+document.addEventListener('DOMContentLoaded', () => {
+    if(window.Echo) {
+        window.Echo.channel('hotel-reservations')
+        .listen('.reservation.created', (e) => {
+            console.log('Real-Time Booking Triggered:', e);
+            // Create dynamic Bootstrap Toast for Glassmorphism UI
+            const toastHtml = `
+            <div class="toast align-items-center text-white bg-success border-0 glass-panel mb-2" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        <strong><i class="bi bi-bell-fill me-2"></i> ${e.message}</strong><br>
+                        <span class="small opacity-75">Revenue Impact: $${e.total_price}</span>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>`;
+            
+            let container = document.getElementById('toast-container');
+            if(!container) {
+                container = document.createElement('div');
+                container.id = 'toast-container';
+                container.className = 'toast-container position-fixed bottom-0 end-0 p-3';
+                document.body.appendChild(container);
+            }
+
+            container.insertAdjacentHTML('beforeend', toastHtml);
+            const newToast = container.lastElementChild;
+            const bsToast = new bootstrap.Toast(newToast, {delay: 10000});
+            bsToast.show();
+        });
+    }
+});

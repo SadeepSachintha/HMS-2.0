@@ -29,6 +29,8 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('reservations.calendar') }}"><i class="bi bi-calendar-event"></i> Calendar</a>
                         </li>
+                        
+                        @if(Auth::check() && in_array(Auth::user()->role->slug ?? 'guest', ['admin', 'staff']))
                         <li class="nav-item ps-2">
                             <a class="nav-link" href="{{ route('hotels.index') }}"><i class="bi bi-buildings"></i> Hotels</a>
                         </li>
@@ -36,8 +38,15 @@
                             <a class="nav-link" href="{{ route('rooms.index') }}"><i class="bi bi-box-seam"></i> Rooms</a>
                         </li>
                         <li class="nav-item ps-2">
+                            <a class="nav-link" href="{{ route('staff.index') }}"><i class="bi bi-people-fill"></i> Staff</a>
+                        </li>
+                        @endif
+
+                        @if(Auth::check() && (Auth::user()->role->slug ?? 'guest') === 'admin')
+                        <li class="nav-item ps-2">
                             <a class="nav-link text-warning" href="{{ route('billing.index') }}"><i class="bi bi-wallet2"></i> Billing</a>
                         </li>
+                        @endif
                     </ul>
 
                     <!-- Right Side Of Navbar -->
