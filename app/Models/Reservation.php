@@ -16,6 +16,7 @@ class Reservation extends Model
         'check_out_date',
         'total_price',
         'status',
+        'payment_status',
         'special_requests',
     ];
 

@@ -12,7 +12,7 @@
         <a href="{{ route('reservations.export') }}" class="btn btn-success fw-bold rounded-pill px-4 hover-lift shadow-sm">
             <i class="bi bi-file-earmark-excel me-2"></i> Export Bookings
         </a>
-        <a href="#" class="btn btn-outline-light rounded-pill px-4 hover-lift shadow-sm">
+        <a href="{{ route('reservations.index') }}" class="btn btn-outline-light rounded-pill px-4 hover-lift shadow-sm">
             <i class="bi bi-list-ul me-2"></i> List View
         </a>
     </div>

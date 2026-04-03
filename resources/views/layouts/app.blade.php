@@ -27,13 +27,16 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('reservations.index') }}"><i class="bi bi-calendar-event"></i> Calendar</a>
+                            <a class="nav-link" href="{{ route('reservations.calendar') }}"><i class="bi bi-calendar-event"></i> Calendar</a>
                         </li>
                         <li class="nav-item ps-2">
                             <a class="nav-link" href="{{ route('hotels.index') }}"><i class="bi bi-buildings"></i> Hotels</a>
                         </li>
                         <li class="nav-item ps-2">
                             <a class="nav-link" href="{{ route('rooms.index') }}"><i class="bi bi-box-seam"></i> Rooms</a>
+                        </li>
+                        <li class="nav-item ps-2">
+                            <a class="nav-link text-warning" href="{{ route('billing.index') }}"><i class="bi bi-wallet2"></i> Billing</a>
                         </li>
                     </ul>
 

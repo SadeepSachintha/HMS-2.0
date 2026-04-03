@@ -12,6 +12,12 @@ class ReservationController extends Controller
 {
     public function index()
     {
+        $reservations = Reservation::with(['room.hotel', 'user'])->latest()->get();
+        return view('reservations.index', compact('reservations'));
+    }
+
+    public function calendar()
+    {
         return view('reservations.calendar');
     }
 
