@@ -7,6 +7,10 @@
         "dev": "vite"
     },
     "devDependencies": {
+        "@fullcalendar/bootstrap5": "^6.1.20",
+        "@fullcalendar/core": "^6.1.20",
+        "@fullcalendar/daygrid": "^6.1.20",
+        "@fullcalendar/interaction": "^6.1.20",
         "@popperjs/core": "^2.11.8",
         "@tailwindcss/vite": "^4.0.0",
         "axios": "^1.11.0",
