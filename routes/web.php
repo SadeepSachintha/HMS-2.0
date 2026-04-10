@@ -59,5 +59,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('reservations/calendar-events', [\App\Http\Controllers\ReservationController::class, 'calendarEvents'])->name('reservations.api.events');
     Route::get('reservations/{reservation}/invoice', [\App\Http\Controllers\ReservationController::class, 'downloadInvoice'])->name('reservations.invoice');
     Route::get('reservations/export', [\App\Http\Controllers\ReservationController::class, 'exportReport'])->name('reservations.export');
+    Route::get('reservations/check-availability', [\App\Http\Controllers\ReservationController::class, 'checkAvailability'])->name('reservations.check-availability');
     Route::resource('reservations', \App\Http\Controllers\ReservationController::class);
 });

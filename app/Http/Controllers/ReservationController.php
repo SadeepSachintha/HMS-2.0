@@ -99,10 +99,29 @@ class ReservationController extends Controller
         return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\ReservationsExport, 'reservations-report.xlsx');
     }
 
+    public function checkAvailability(Request $request)
+    {
+        $request->validate([
+            'check_in_date' => 'required|date',
+            'check_out_date' => 'required|date|after:check_in_date',
+        ]);
+
+        $bookedRoomIds = Reservation::whereIn('status', ['confirmed'])
+            ->where(function ($q) use ($request) {
+                $q->where('check_in_date', '<', $request->check_out_date)
+                  ->where('check_out_date', '>', $request->check_in_date);
+            })->pluck('room_id');
+
+        $availableRooms = Room::where('status', 'available')
+            ->whereNotIn('id', $bookedRoomIds)
+            ->get();
+
+        return response()->json(['available_rooms' => $availableRooms]);
+    }
+
     public function create()
     {
-        $rooms = Room::where('status', 'available')->get();
-        return view('reservations.create', compact('rooms'));
+        return view('reservations.create');
     }
 
     public function store(Request $request)
@@ -113,6 +132,18 @@ class ReservationController extends Controller
             'check_out_date' => 'required|date|after:check_in_date',
             'special_requests' => 'nullable|string'
         ]);
+
+        // Check for double-booking (overlapping reservations for the same room)
+        $conflict = \App\Models\Reservation::where('room_id', $validated['room_id'])
+            ->whereIn('status', ['confirmed'])
+            ->where(function ($q) use ($validated) {
+                $q->where('check_in_date', '<', $validated['check_out_date'])
+                  ->where('check_out_date', '>', $validated['check_in_date']);
+            })->first();
+
+        if ($conflict) {
+            return back()->withErrors(['room_id' => 'This room is already booked for the selected dates (Conflicts with a reservation from ' . \Carbon\Carbon::parse($conflict->check_in_date)->format('M d') . ' to ' . \Carbon\Carbon::parse($conflict->check_out_date)->format('M d') . '). Please adjust your dates or choose a different room.'])->withInput();
+        }
 
         $room = Room::findOrFail($validated['room_id']);
         $days = \Carbon\Carbon::parse($validated['check_in_date'])->diffInDays(\Carbon\Carbon::parse($validated['check_out_date']));
