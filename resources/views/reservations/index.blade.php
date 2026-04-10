@@ -9,8 +9,13 @@
         <p class="text-light opacity-75 mb-0">Traditional list view of all historic and upcoming bookings.</p>
     </div>
     <div class="col-md-6 text-md-end mt-3 mt-md-0 d-flex gap-2 justify-content-md-end">
+        @if(auth()->user() && auth()->user()->role?->slug !== 'guest')
         <a href="{{ route('reservations.export') }}" class="btn btn-success fw-bold rounded-pill px-4 hover-lift shadow-sm">
             <i class="bi bi-file-earmark-excel me-2"></i> Export Bookings
+        </a>
+        @endif
+        <a href="{{ route('reservations.create') }}" class="btn btn-warning fw-bold rounded-pill px-4 hover-lift shadow-sm text-dark">
+            <i class="bi bi-plus-lg me-2"></i> Reserve Room
         </a>
         <a href="{{ route('reservations.calendar') }}" class="btn btn-primary rounded-pill px-4 hover-lift shadow-sm">
             <i class="bi bi-calendar3 me-2"></i> Calendar View

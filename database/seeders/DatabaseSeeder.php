@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
     {
         // 1. Create Roles
         $adminRole = \App\Models\Role::create(['name' => 'Admin', 'slug' => 'admin', 'description' => 'System Administrator']);
+        $managerRole = \App\Models\Role::create(['name' => 'Manager', 'slug' => 'manager', 'description' => 'Hotel Manager']);
         $staffRole = \App\Models\Role::create(['name' => 'Staff', 'slug' => 'staff', 'description' => 'Hotel Staff']);
         $userRole = \App\Models\Role::create(['name' => 'Guest', 'slug' => 'guest', 'description' => 'Hotel Patient/Guest']);
 

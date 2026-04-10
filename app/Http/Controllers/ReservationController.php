@@ -12,7 +12,14 @@ class ReservationController extends Controller
 {
     public function index()
     {
-        $reservations = Reservation::with(['room.hotel', 'user'])->latest()->get();
+        $query = Reservation::with(['room.hotel', 'user'])->latest();
+        
+        $user = auth()->user();
+        if ($user && $user->role && $user->role->slug === 'guest') {
+            $query->where('user_id', $user->id);
+        }
+
+        $reservations = $query->get();
         return view('reservations.index', compact('reservations'));
     }
 
@@ -23,7 +30,14 @@ class ReservationController extends Controller
 
     public function calendarEvents(Request $request)
     {
-        $reservations = Reservation::with(['room.hotel', 'user'])->get();
+        $query = Reservation::with(['room.hotel', 'user']);
+        
+        $user = auth()->user();
+        if ($user && $user->role && $user->role->slug === 'guest') {
+            $query->where('user_id', $user->id);
+        }
+
+        $reservations = $query->get();
         
         $events = [];
         foreach ($reservations as $res) {
@@ -53,12 +67,22 @@ class ReservationController extends Controller
 
     public function show(Reservation $reservation)
     {
+        $user = auth()->user();
+        if ($user && $user->role && $user->role->slug === 'guest' && $reservation->user_id !== $user->id) {
+            abort(403, 'Unauthorized. This reservation does not belong to you.');
+        }
+
         $reservation->load(['room.hotel', 'user']);
         return view('reservations.show', compact('reservation'));
     }
 
     public function downloadInvoice(Reservation $reservation)
     {
+        $user = auth()->user();
+        if ($user && $user->role && $user->role->slug === 'guest' && $reservation->user_id !== $user->id) {
+            abort(403, 'Unauthorized. This reservation does not belong to you.');
+        }
+
         $reservation->load(['room.hotel', 'user']);
         
         $pdf = Pdf::loadView('reservations.invoice', compact('reservation'));
@@ -67,6 +91,11 @@ class ReservationController extends Controller
 
     public function exportReport()
     {
+        $user = auth()->user();
+        if ($user && $user->role && $user->role->slug === 'guest') {
+            abort(403, 'Guests are not permitted to export global reports.');
+        }
+
         return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\ReservationsExport, 'reservations-report.xlsx');
     }
 

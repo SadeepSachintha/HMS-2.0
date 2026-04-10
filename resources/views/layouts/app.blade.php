@@ -30,21 +30,36 @@
                             <a class="nav-link" href="{{ route('reservations.calendar') }}"><i class="bi bi-calendar-event"></i> Calendar</a>
                         </li>
                         
-                        @if(Auth::check() && in_array(Auth::user()->role->slug ?? 'guest', ['admin', 'staff']))
+                        @if(Auth::check() && in_array(Auth::user()->role->slug ?? 'guest', ['admin', 'manager', 'staff']))
                         <li class="nav-item ps-2">
                             <a class="nav-link" href="{{ route('hotels.index') }}"><i class="bi bi-buildings"></i> Hotels</a>
                         </li>
                         <li class="nav-item ps-2">
                             <a class="nav-link" href="{{ route('rooms.index') }}"><i class="bi bi-box-seam"></i> Rooms</a>
                         </li>
+                        @endif
+
+                        @if(Auth::check() && in_array(Auth::user()->role->slug ?? 'guest', ['admin', 'manager']))
                         <li class="nav-item ps-2">
                             <a class="nav-link" href="{{ route('staff.index') }}"><i class="bi bi-people-fill"></i> Staff</a>
                         </li>
+                        @endif
+
+                        @if(Auth::check() && in_array(Auth::user()->role->slug ?? 'guest', ['admin', 'manager', 'staff']))
                         <li class="nav-item ps-2">
                             <a class="nav-link" href="{{ route('customers.index') }}"><i class="bi bi-person-vcard"></i> CRM</a>
                         </li>
+                        @endif
+
+                        @if(Auth::check() && in_array(Auth::user()->role->slug ?? 'guest', ['admin', 'manager']))
                         <li class="nav-item ps-2">
                             <a class="nav-link text-info" href="{{ route('reports.index') }}"><i class="bi bi-graph-up"></i> Reports</a>
+                        </li>
+                        @endif
+
+                        @if(Auth::check() && in_array(Auth::user()->role->slug ?? 'guest', ['admin', 'manager', 'staff']))
+                        <li class="nav-item ps-2">
+                            <a class="nav-link text-warning" href="{{ route('billing.index') }}"><i class="bi bi-wallet2"></i> Billing</a>
                         </li>
                         @endif
 
@@ -54,9 +69,6 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-danger" href="{{ route('users.index') }}"><i class="bi bi-diagram-3-fill"></i> Users</a>
-                        </li>
-                        <li class="nav-item ps-2">
-                            <a class="nav-link text-warning" href="{{ route('billing.index') }}"><i class="bi bi-wallet2"></i> Billing</a>
                         </li>
                         @endif
                     </ul>

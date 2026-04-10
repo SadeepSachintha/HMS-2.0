@@ -11,8 +11,8 @@
                 Experience the next-generation Hotel Management System. Seamless reservations, intelligent scheduling, and vibrant dashboards.
             </p>
             <div class="d-flex gap-3 justify-content-center justify-content-md-start">
-                <a href="{{ route('rooms.index') }}" class="btn btn-primary btn-lg rounded-pill px-5 hover-lift shadow-lg">Book a Room</a>
-                <a href="{{ route('hotels.index') }}" class="btn btn-outline-light btn-lg rounded-pill px-5 hover-lift">Dashboard</a>
+                <a href="{{ route('reservations.create') }}" class="btn btn-primary btn-lg rounded-pill px-5 hover-lift shadow-lg">Book a Room</a>
+                <a href="{{ route('home') }}" class="btn btn-outline-light btn-lg rounded-pill px-5 hover-lift">Dashboard</a>
             </div>
         </div>
         <div class="col-md-6 mt-5 mt-md-0 position-relative">
