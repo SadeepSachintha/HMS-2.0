@@ -16,6 +16,29 @@ class UserController extends Controller
         return view('users.index', compact('users'));
     }
 
+    public function create()
+    {
+        $roles = Role::all();
+        return view('users.create', compact('roles'));
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|confirmed',
+            'phone' => 'nullable|string|max:20',
+            'role_id' => 'required|exists:roles,id',
+            'status' => 'required|in:active,suspended',
+        ]);
+
+        $validated['password'] = Hash::make($validated['password']);
+        User::create($validated);
+
+        return redirect()->route('users.index')->with('success', 'User completely registered and mapped to requested tier.');
+    }
+
     public function edit(User $user)
     {
         $roles = Role::all();
@@ -34,6 +57,7 @@ class UserController extends Controller
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
             'phone' => 'nullable|string|max:20',
             'role_id' => 'required|exists:roles,id',
+            'status' => 'required|in:active,suspended',
         ]);
 
         $user->update($validated);

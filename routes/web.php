@@ -25,7 +25,7 @@ Route::middleware(['auth'])->group(function () {
             Route::patch('billing/{reservation}', [\App\Http\Controllers\BillingController::class, 'updateStatus'])->name('billing.update');
 
             // User Master Array
-            Route::resource('users', \App\Http\Controllers\UserController::class)->except(['create', 'store', 'show']);
+            Route::resource('users', \App\Http\Controllers\UserController::class)->except(['show']);
             Route::post('users/{user}/force-password', [\App\Http\Controllers\UserController::class, 'forcePasswordReset'])->name('users.password.force');
         });
     });

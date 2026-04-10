@@ -8,6 +8,11 @@
         <h2 class="text-white fw-bold mb-0">System Identity Governance</h2>
         <p class="text-light opacity-75 mb-0">Absolute control module over platform hierarchies, passwords, and permissions.</p>
     </div>
+    <div class="col-md-6 text-md-end mt-3 mt-md-0">
+        <a href="{{ route('users.create') }}" class="btn btn-danger rounded-pill px-4 hover-lift shadow-sm">
+            <i class="bi bi-person-plus-fill me-2"></i> Register Native Identity
+        </a>
+    </div>
 </div>
 
 @if(session('success'))
@@ -58,6 +63,13 @@
                             @endif
                         </td>
                         <td class="py-3">
+                            <div class="mb-1">
+                                @if($user->status === 'active')
+                                    <span class="badge bg-success bg-opacity-25 text-success rounded-pill px-2 border border-success"><i class="bi bi-circle-fill small me-1"></i> Active Session</span>
+                                @else
+                                    <span class="badge bg-danger bg-opacity-25 text-danger rounded-pill px-2 border border-danger"><i class="bi bi-x-circle-fill small me-1"></i> Suspended</span>
+                                @endif
+                            </div>
                             <span class="small text-muted">{{ \Carbon\Carbon::parse($user->created_at)->diffForHumans() }}</span>
                         </td>
                         <td class="pe-4 py-3 text-end">

@@ -59,6 +59,18 @@
                             </div>
 
                             <div class="mb-3">
+                                <label class="form-label text-light">Account Status <span class="text-danger">*</span></label>
+                                <select name="status" class="form-select bg-dark text-white border-secondary" required {{ Auth::id() === $user->id ? 'disabled' : '' }}>
+                                    <option value="active" {{ $user->status == 'active' ? 'selected' : '' }}>Active - Standard Connectivity</option>
+                                    <option value="suspended" {{ $user->status == 'suspended' ? 'selected' : '' }}>Suspended - Hard Lockout Protocol</option>
+                                </select>
+                                @if(Auth::id() === $user->id)
+                                    <small class="text-warning"><i class="bi bi-lock"></i> Anti-Lockout protocol prevents suspending your native instance.</small>
+                                    <input type="hidden" name="status" value="{{ $user->status }}">
+                                @endif
+                            </div>
+
+                            <div class="mb-3">
                                 <label class="form-label text-light">Entity Name <span class="text-danger">*</span></label>
                                 <input type="text" name="name" class="form-control bg-dark text-white border-secondary" value="{{ $user->name }}" required>
                             </div>
