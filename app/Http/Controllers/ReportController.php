@@ -47,4 +47,19 @@ class ReportController extends Controller
             'lifetimeBookings'
         ));
     }
+
+    public function exportCustom(Request $request)
+    {
+        $type = $request->input('type', 'reservations');
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        if ($type === 'occupancy') {
+            return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\OccupancyExport(), 'occupancy-report.xlsx');
+        } elseif ($type === 'revenue') {
+            return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\RevenueExport($startDate, $endDate), "revenue-report-{$startDate}-to-{$endDate}.xlsx");
+        } else {
+            return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\ReservationsExport($startDate, $endDate), "reservations-report-{$startDate}-to-{$endDate}.xlsx");
+        }
+    }
 }

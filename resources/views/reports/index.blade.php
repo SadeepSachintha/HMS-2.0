@@ -9,9 +9,9 @@
         <p class="text-light opacity-75 mb-0">Monitor high-level organizational heuristics and performance data.</p>
     </div>
     <div class="col-md-6 text-md-end mt-3 mt-md-0 d-flex gap-2 justify-content-md-end">
-        <a href="{{ route('reservations.export') }}" class="btn btn-success fw-bold rounded-pill px-4 hover-lift shadow-sm">
-            <i class="bi bi-file-earmark-excel me-2"></i> Export Complete Ledger
-        </a>
+        <button type="button" class="btn btn-primary fw-bold px-4 shadow-sm" data-bs-toggle="modal" data-bs-target="#customReportModal">
+            <i class="bi bi-file-earmark-bar-graph me-2"></i> Custom Report Generation
+        </button>
     </div>
 </div>
 
@@ -87,6 +87,49 @@
                 <div class="display-3 text-success fw-bold mb-3">${{ number_format($lifetimeRevenue, 2) }}</div>
                 <p class="text-muted">Aggregate platform valuation metrics based on cleared payments.</p>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Custom Report Modal -->
+<div class="modal fade" id="customReportModal" tabindex="-1" aria-labelledby="customReportModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content glass-panel border-0 text-white">
+            <div class="modal-header border-bottom border-secondary border-opacity-25">
+                <h5 class="modal-title fw-bold" id="customReportModalLabel">
+                    <i class="bi bi-funnel-fill me-2 text-primary"></i> Report Parameters
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{{ route('reports.export.custom') }}" method="GET">
+                <div class="modal-body p-4">
+                    <div class="mb-4">
+                        <label class="form-label text-white-50 fw-semibold small text-uppercase">Report Type</label>
+                        <select name="type" class="form-select bg-dark border-secondary text-white shadow-none" required>
+                            <option value="occupancy">Occupancy Report (Live Snapshot)</option>
+                            <option value="revenue">Revenue Report (Filtered by Payment Date)</option>
+                            <option value="reservations">Reservations Report (Filtered by Check-In Date)</option>
+                        </select>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label text-white-50 fw-semibold small text-uppercase">Start Date</label>
+                            <input type="date" name="start_date" class="form-control bg-dark border-secondary text-white shadow-none">
+                            <small class="text-white-50 xs">Not applicable for Occupancy</small>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-white-50 fw-semibold small text-uppercase">End Date</label>
+                            <input type="date" name="end_date" class="form-control bg-dark border-secondary text-white shadow-none">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-top border-secondary border-opacity-25 p-3">
+                    <button type="button" class="btn btn-dark fw-bold px-4" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary fw-bold px-4 hover-lift">
+                        <i class="bi bi-download me-2"></i> Export Data
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

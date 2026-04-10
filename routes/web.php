@@ -38,6 +38,7 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['role:admin,manager'])->group(function () {
         // Report Dashboard Nexus
         Route::get('reports', [\App\Http\Controllers\ReportController::class, 'index'])->name('reports.index');
+        Route::get('reports/export/custom', [\App\Http\Controllers\ReportController::class, 'exportCustom'])->name('reports.export.custom');
         
         // Staff Management Module
         Route::resource('staff', \App\Http\Controllers\StaffController::class);
