@@ -11,7 +11,13 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    $availableRooms = \App\Models\Room::where('status', 'available')->count();
+    $activeStaff = \App\Models\User::whereHas('role', function($q) {
+        $q->whereIn('slug', ['staff', 'manager']);
+    })->count();
+    $pendingReservations = \App\Models\Reservation::where('status', 'pending')->count();
+
+    return view('welcome', compact('availableRooms', 'activeStaff', 'pendingReservations'));
 });
 
 // Dynamic Dashboard Redirect based on Role after Login

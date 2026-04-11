@@ -26,19 +26,19 @@
                     <div class="row g-4">
                         <div class="col-6">
                             <div class="p-3 bg-dark bg-opacity-50 rounded-4 hover-lift border border-secondary border-opacity-25">
-                                <h4 class="text-info fw-bold mb-0">12</h4>
+                                <h4 class="text-info fw-bold mb-0">{{ $availableRooms }}</h4>
                                 <span class="text-muted small">Available Rooms</span>
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="p-3 bg-dark bg-opacity-50 rounded-4 hover-lift border border-secondary border-opacity-25">
-                                <h4 class="text-success fw-bold mb-0">8</h4>
+                                <h4 class="text-success fw-bold mb-0">{{ $activeStaff }}</h4>
                                 <span class="text-muted small">Active Staff</span>
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="p-3 bg-dark bg-opacity-50 rounded-4 hover-lift border border-secondary border-opacity-25 mt-2">
-                                <h4 class="text-warning fw-bold mb-0">3</h4>
+                                <h4 class="text-warning fw-bold mb-0">{{ $pendingReservations }}</h4>
                                 <span class="text-muted small">Pending Events & Reservations</span>
                             </div>
                         </div>
