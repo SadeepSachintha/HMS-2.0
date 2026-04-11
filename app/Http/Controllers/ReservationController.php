@@ -147,7 +147,15 @@ class ReservationController extends Controller
 
     public function create()
     {
-        return view('reservations.create');
+        $guests = collect();
+        $user = auth()->user();
+        if ($user && in_array($user->role->slug ?? '', ['admin', 'manager', 'staff'])) {
+            $guests = \App\Models\User::whereHas('role', function ($query) {
+                $query->where('slug', 'guest');
+            })->latest()->get();
+        }
+
+        return view('reservations.create', compact('guests'));
     }
 
     /**
@@ -160,6 +168,7 @@ class ReservationController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
+            'user_id' => 'nullable|exists:users,id',
             'room_id' => 'required|exists:rooms,id',
             'check_in_date' => 'required|date',
             'check_out_date' => 'required|date|after:check_in_date',
@@ -182,8 +191,12 @@ class ReservationController extends Controller
         $days = Carbon::parse($validated['check_in_date'])->diffInDays(Carbon::parse($validated['check_out_date']));
         $totalPrice = $room->price_per_night * max($days, 1);
 
+        $user = auth()->user();
+        $isStaff = $user && in_array($user->role->slug ?? '', ['admin', 'manager', 'staff']);
+        $assignedUserId = ($isStaff && !empty($validated['user_id'])) ? $validated['user_id'] : ($user->id ?? 1);
+
         $reservation = Reservation::create([
-            'user_id' => auth()->id() ?? 1, // fallback to 1 if testing without auth
+            'user_id' => $assignedUserId,
             'room_id' => $validated['room_id'],
             'check_in_date' => $validated['check_in_date'],
             'check_out_date' => $validated['check_out_date'],

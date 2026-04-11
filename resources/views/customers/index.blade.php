@@ -8,6 +8,11 @@
         <h2 class="text-white fw-bold mb-0">Guest Intelligence Matrix</h2>
         <p class="text-light opacity-75 mb-0">Monitor distinct customer entities and track global reservation engagement.</p>
     </div>
+    <div class="col-md-6 text-md-end mt-3 mt-md-0">
+        <a href="{{ route('customers.create') }}" class="btn btn-success rounded-pill px-4 hover-lift shadow">
+            <i class="bi bi-person-plus me-2"></i> Register Walk-In Guest
+        </a>
+    </div>
 </div>
 
 <div class="card glass-panel border-0 mb-5">

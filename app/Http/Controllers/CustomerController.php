@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Role;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class CustomerController extends Controller
 {
@@ -27,6 +31,32 @@ class CustomerController extends Controller
         $customer->load('reservations.room.hotel');
 
         return view('customers.show', compact('customer'));
+    }
+
+    public function create()
+    {
+        return view('customers.create');
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'phone' => 'nullable|string|max:20',
+        ]);
+
+        $guestRole = Role::where('slug', 'guest')->firstOrFail();
+
+        // Silent creation paradigm: securely auto-generate a 16-character password
+        // to bootstrap the entity. Guests can trigger standard password-reset protocols later.
+        $validated['password'] = Hash::make(Str::random(16));
+        $validated['role_id'] = $guestRole->id;
+        $validated['status'] = 'active';
+
+        User::create($validated);
+
+        return redirect()->route('customers.index')->with('success', 'Walk-In Guest registered globally. Prepared for immediate reservation assignments.');
     }
 
     // Explicitly omitting the 'destroy' function to satisfy data preservation paradigms.

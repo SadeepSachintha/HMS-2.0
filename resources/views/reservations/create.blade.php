@@ -27,6 +27,22 @@
                 <form action="{{ route('reservations.store') }}" method="POST">
                     @csrf
                     
+                    @isset($guests)
+                    <h5 class="text-warning mb-4 border-bottom border-secondary pb-2 border-opacity-25"><i class="bi bi-person-badge me-2"></i> Guest Allocation</h5>
+                    <div class="mb-4">
+                        <label class="form-label text-light">Register to Guest Profile <span class="text-danger">*</span></label>
+                        <select name="user_id" class="form-select bg-dark text-white border-secondary" required>
+                            <option value="" selected disabled>Select a guest profile...</option>
+                            @foreach($guests as $guest)
+                                <option value="{{ $guest->id }}">{{ $guest->name }} ({{ $guest->email }})</option>
+                            @endforeach
+                        </select>
+                        <div class="form-text text-secondary mt-2">
+                            Guest not listed? <a href="{{ route('customers.create') }}" class="text-info text-decoration-none">Initialize New Walk-In Guest</a>
+                        </div>
+                    </div>
+                    @endisset
+
                     <h5 class="text-info mb-4 border-bottom border-secondary pb-2 border-opacity-25">Duration of Stay</h5>
 
                     <div class="row g-3 mb-4">

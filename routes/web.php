@@ -35,7 +35,7 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['role:admin,manager,staff'])->group(function () {
         Route::resource('hotels', HotelController::class);
         Route::resource('rooms', RoomController::class);
-        Route::resource('customers', CustomerController::class)->only(['index', 'show']);
+        Route::resource('customers', CustomerController::class)->except(['edit', 'update', 'destroy']);
 
         // Billings Central
         Route::get('billing', [BillingController::class, 'index'])->name('billing.index');
