@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Staff;
 use App\Models\Hotel;
+use App\Models\Staff;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -12,6 +12,7 @@ class StaffController extends Controller
     public function index()
     {
         $staff = Staff::with(['user', 'hotel'])->latest()->get();
+
         return view('staff.index', compact('staff'));
     }
 
@@ -20,6 +21,7 @@ class StaffController extends Controller
         $hotels = Hotel::all();
         // Allow creating staff from any user currently registered
         $users = User::all();
+
         return view('staff.create', compact('hotels', 'users'));
     }
 
@@ -43,6 +45,7 @@ class StaffController extends Controller
     public function edit(Staff $staff)
     {
         $hotels = Hotel::all();
+
         return view('staff.edit', compact('staff', 'hotels'));
     }
 
@@ -64,6 +67,7 @@ class StaffController extends Controller
     public function destroy(Staff $staff)
     {
         $staff->delete();
+
         return redirect()->route('staff.index')->with('success', 'Staff clearance revoked successfully.');
     }
 }

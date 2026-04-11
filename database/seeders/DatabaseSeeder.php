@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Hotel;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -16,10 +18,10 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // 1. Create Roles
-        $adminRole = \App\Models\Role::create(['name' => 'Admin', 'slug' => 'admin', 'description' => 'System Administrator']);
-        $managerRole = \App\Models\Role::create(['name' => 'Manager', 'slug' => 'manager', 'description' => 'Hotel Manager']);
-        $staffRole = \App\Models\Role::create(['name' => 'Staff', 'slug' => 'staff', 'description' => 'Hotel Staff']);
-        $userRole = \App\Models\Role::create(['name' => 'Guest', 'slug' => 'guest', 'description' => 'Hotel Patient/Guest']);
+        $adminRole = Role::create(['name' => 'Admin', 'slug' => 'admin', 'description' => 'System Administrator']);
+        $managerRole = Role::create(['name' => 'Manager', 'slug' => 'manager', 'description' => 'Hotel Manager']);
+        $staffRole = Role::create(['name' => 'Staff', 'slug' => 'staff', 'description' => 'Hotel Staff']);
+        $userRole = Role::create(['name' => 'Guest', 'slug' => 'guest', 'description' => 'Hotel Patient/Guest']);
 
         // 2. Create Admin User
         $adminUser = User::factory()->create([
@@ -31,7 +33,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // 3. Create a Demo Hotel
-        $hotel = \App\Models\Hotel::create([
+        $hotel = Hotel::create([
             'name' => 'Grand Plaza Hotel',
             'email' => 'info@grandplaza.com',
             'phone' => '+1 800 555 0199',
@@ -55,14 +57,14 @@ class DatabaseSeeder extends Seeder
             'capacity' => 2,
             'price_per_night' => 199.99,
         ]);
-        
+
         // 5. Create a Reservation using Eloquent Relationship
         $adminUser->reservations()->create([
             'room_id' => 1,
             'check_in_date' => now()->addDays(2),
             'check_out_date' => now()->addDays(5),
             'total_price' => 899.97,
-            'status' => 'confirmed'
+            'status' => 'confirmed',
         ]);
     }
 }

@@ -5,8 +5,6 @@ namespace App\Events;
 use App\Models\Reservation;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
-use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -28,7 +26,7 @@ class NewReservationCreated implements ShouldBroadcast
     /**
      * Get the channels the event should broadcast on.
      *
-     * @return array<int, \Illuminate\Broadcasting\Channel>
+     * @return array<int, Channel>
      */
     public function broadcastOn(): array
     {
@@ -37,7 +35,7 @@ class NewReservationCreated implements ShouldBroadcast
             new Channel('hotel-reservations'),
         ];
     }
-    
+
     /**
      * The event's broadcast name.
      */
@@ -53,9 +51,9 @@ class NewReservationCreated implements ShouldBroadcast
     {
         return [
             'id' => $this->reservation->id,
-            'message' => 'New Booking: Room #' . ($this->reservation->room->room_number ?? 'N/A') . ' by ' . ($this->reservation->user->name ?? 'Guest'),
+            'message' => 'New Booking: Room #'.($this->reservation->room->room_number ?? 'N/A').' by '.($this->reservation->user->name ?? 'Guest'),
             'total_price' => $this->reservation->total_price,
-            'url' => route('reservations.show', $this->reservation->id)
+            'url' => route('reservations.show', $this->reservation->id),
         ];
     }
 }

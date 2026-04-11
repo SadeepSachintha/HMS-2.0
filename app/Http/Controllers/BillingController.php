@@ -10,7 +10,7 @@ class BillingController extends Controller
     public function index()
     {
         $reservations = Reservation::with(['user', 'room.hotel'])->orderBy('created_at', 'desc')->get();
-        
+
         $totalRevenue = $reservations->where('payment_status', 'paid')->sum('total_price');
         $pendingRevenue = $reservations->whereIn('payment_status', ['unpaid', 'partial'])->sum('total_price');
 
@@ -20,7 +20,7 @@ class BillingController extends Controller
     public function updateStatus(Request $request, Reservation $reservation)
     {
         $validated = $request->validate([
-            'payment_status' => 'required|in:unpaid,partial,paid,refunded'
+            'payment_status' => 'required|in:unpaid,partial,paid,refunded',
         ]);
 
         $reservation->update(['payment_status' => $validated['payment_status']]);

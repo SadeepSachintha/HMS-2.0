@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\OccupancyExport;
+use App\Exports\ReservationsExport;
+use App\Exports\RevenueExport;
 use App\Models\Reservation;
 use App\Models\Room;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ReportController extends Controller
 {
@@ -13,7 +17,7 @@ class ReportController extends Controller
     {
         // 1. Calculate Occupancy Metrics (Currently Occupied Rooms / Total Active Rooms)
         $totalRooms = Room::count();
-        
+
         $currentlyOccupiedRooms = Reservation::where('status', 'confirmed')
             ->where('check_in_date', '<=', Carbon::now())
             ->where('check_out_date', '>=', Carbon::now())
@@ -23,7 +27,7 @@ class ReportController extends Controller
 
         // 2. Calculate Revenue Boundaries (Trailing 30 Days)
         $thirtyDaysAgo = Carbon::now()->subDays(30);
-        
+
         $trailingRevenue = Reservation::where('payment_status', 'paid')
             ->where('created_at', '>=', $thirtyDaysAgo)
             ->sum('total_price');
@@ -38,10 +42,10 @@ class ReportController extends Controller
         $lifetimeBookings = Reservation::count();
 
         return view('reports.index', compact(
-            'occupancyRate', 
-            'currentlyOccupiedRooms', 
-            'totalRooms', 
-            'trailingRevenue', 
+            'occupancyRate',
+            'currentlyOccupiedRooms',
+            'totalRooms',
+            'trailingRevenue',
             'upcomingReservations',
             'lifetimeRevenue',
             'lifetimeBookings'
@@ -55,11 +59,11 @@ class ReportController extends Controller
         $endDate = $request->input('end_date');
 
         if ($type === 'occupancy') {
-            return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\OccupancyExport(), 'occupancy-report.xlsx');
+            return Excel::download(new OccupancyExport, 'occupancy-report.xlsx');
         } elseif ($type === 'revenue') {
-            return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\RevenueExport($startDate, $endDate), "revenue-report-{$startDate}-to-{$endDate}.xlsx");
+            return Excel::download(new RevenueExport($startDate, $endDate), "revenue-report-{$startDate}-to-{$endDate}.xlsx");
         } else {
-            return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\ReservationsExport($startDate, $endDate), "reservations-report-{$startDate}-to-{$endDate}.xlsx");
+            return Excel::download(new ReservationsExport($startDate, $endDate), "reservations-report-{$startDate}-to-{$endDate}.xlsx");
         }
     }
 }

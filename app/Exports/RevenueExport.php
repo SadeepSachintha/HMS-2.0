@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Models\Reservation;
+use Illuminate\Database\Eloquent\Builder;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
@@ -10,6 +11,7 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 class RevenueExport implements FromQuery, WithHeadings, WithMapping
 {
     protected $startDate;
+
     protected $endDate;
 
     public function __construct($startDate = null, $endDate = null)
@@ -19,12 +21,12 @@ class RevenueExport implements FromQuery, WithHeadings, WithMapping
     }
 
     /**
-    * @return \Illuminate\Database\Eloquent\Builder
-    */
+     * @return Builder
+     */
     public function query()
     {
         $query = Reservation::query()->with(['user', 'room.hotel'])->where('payment_status', 'paid');
-        
+
         if ($this->startDate) {
             $query->whereDate('updated_at', '>=', $this->startDate);
         }
@@ -45,7 +47,7 @@ class RevenueExport implements FromQuery, WithHeadings, WithMapping
             'Check-In Date',
             'Check-Out Date',
             'Payment Status',
-            'Total Revenue ($)'
+            'Total Revenue ($)',
         ];
     }
 
